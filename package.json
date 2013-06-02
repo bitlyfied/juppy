@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Speeding up front-end development",
   "main": "index.js",
+  "bin": {
+    "yuppy" : "./bin/yuppy"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +16,7 @@
   "gitHead": "3b79317c18ef2499f1adea84be7ff6ee5ea6abe5",
   "dependencies": {
     "express": "~3.2.5",
-    "http-proxy": "~0.10.2"
+    "http-proxy": "~0.10.2",
+    "celeri": "~0.3.2"
   }
 }
