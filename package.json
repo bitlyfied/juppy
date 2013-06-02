@@ -1,0 +1,14 @@
+{
+  "name": "juppy",
+  "version": "0.0.1",
+  "description": "Speeding up front-end development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README",
+  "gitHead": "3b79317c18ef2499f1adea84be7ff6ee5ea6abe5"
+}
