@@ -4,7 +4,7 @@
   "description": "Speeding up front-end development",
   "main": "juppy.js",
   "bin": {
-    "juppy" : "./bin/juppy"
+    "juppy": "./bin/juppy"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +16,7 @@
   "gitHead": "3b79317c18ef2499f1adea84be7ff6ee5ea6abe5",
   "dependencies": {
     "express": "~3.2.5",
-    "http-proxy": "~0.10.2"
+    "http-proxy": "~0.10.2",
+    "celeri": "git://github.com/bitlyfied/celeri.git"
   }
 }
