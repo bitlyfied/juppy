@@ -1,8 +1,10 @@
 var express = require('express');
 var httpProxy = require('http-proxy');
 var multiProxy = new httpProxy.RoutingProxy();
-var extend = require('util')._extend;
+var util = require('util');
+var extend = util._extend;
 var colors = require('colors');
+var fs = require('fs');
 
 var proxy;
 var cache = {};
@@ -20,7 +22,8 @@ exp.get('/hello', function(req, res){
 });
 
 function proxyCache(req, res, next){
-	var signature = req.method + req.url;
+
+	var signature = getSignature(req);
     var hit = getCache(req);
 
     if(settings.cache && hit){
@@ -46,6 +49,11 @@ function initProxy(p){
     proxy = p;
 
     proxy.on('start', function(req, res, response){
+
+        if((!settings.cache) || getCache(req)){
+            return;
+        }
+
         var hit = {body:'', chunks: [], header:'', status: 200};
         var write = res.write;
 
@@ -69,11 +77,15 @@ function initProxy(p){
 }
 
 function getCache(req){
-    return cache[req.method + req.url];
+    return cache[getSignature(req)];
+}
+
+function getSignature(req){
+    return req.method + ' ' + req.headers.host + '/' + req.url;
 }
 
 function setCache(req, hit){
-    cache[req.method + req.url] = hit;
+    cache[getSignature(req)] = hit;
 }
 
 var server = {
@@ -85,6 +97,22 @@ var server = {
 		exp.use(express.static(staticPath + '/'));
 		console.log('Serving static content path: ', staticPath.green);
 	},
+    cacheDump: function(){
+        var filename = 'cache-dump.txt';
+        var dump = 'Requests: ' + Object.keys(cache).toString() + "\n";
+
+        Object.keys(cache).forEach(function(signature){
+            dump += "\n\n\n";
+            dump += signature + "\n\n\n\n";
+            dump += "HEADERS: " + cache[signature].header + "\n\n\n\n";
+            dump += "BODY: " + cache[signature].body + "\n\n\n\n";
+        });
+
+        fs.writeFile(filename, dump, function (err) {
+            if (err) throw err;
+            console.log('Cache dump saved on :' + filename.green);
+        });
+    },
 	proxy: function(ip, port){
 		settings.forwardIp = ip;
 		settings.forwardPort = port || 80;

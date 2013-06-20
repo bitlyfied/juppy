@@ -30,6 +30,15 @@ celeri.option({
     server.cache();
 });
 
+
+celeri.option({
+    command: 'cacheDump',
+    description: 'Save the cache in a file'
+}, function(data) {
+    server.cacheDump();
+});
+
+
 celeri.option({
     command: 'proxy :ip OR proxy :ip :port',
     description: 'Set-up the server to proxy requests'
