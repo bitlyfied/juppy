@@ -1,4 +1,6 @@
-var celeri = require('celeri');
+var celeri = require('celeri'),
+    path = require('path'),
+    server = require('./server.js');
 
 var api = {
     sayHello: function(name) {
@@ -7,8 +9,19 @@ var api = {
 }
 
 
-celeri.onJs({ api: api });
+celeri.option({
+    command: 'start :path',
+    description: 'Starts the proxy-cache server, using [path] as public folder"'
+}, function(data) {
+    var staticPath = path.resolve(data.path);
 
-celeri.open({prefix: 'juppy > '});
+    server.config({
+        staticPath: staticPath
+    });
+
+    server.start();
+});
 
 celeri.parse(process.argv);
+
+//celeri.open({prefix: 'juppy > '});
