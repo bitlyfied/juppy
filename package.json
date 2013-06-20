@@ -1,6 +1,6 @@
 {
   "name": "juppy",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Speeding up front-end development",
   "main": "juppy.js",
   "bin": {
