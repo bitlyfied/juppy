@@ -2,26 +2,41 @@ var celeri = require('celeri'),
     path = require('path'),
     server = require('./server.js');
 
-var api = {
-    sayHello: function(name) {
-        console.log("hello %s!", name || 'craig');
-    }
-}
-
-
 celeri.option({
-    command: 'start :path',
-    description: 'Starts the proxy-cache server, using [path] as public folder"'
+    command: 'serve :path OR serve :path :proxy',
+    description: 'Starts the server, using [path] as public folder'
 }, function(data) {
-    var staticPath = path.resolve(data.path);
-
-    server.config({
-        staticPath: staticPath
-    });
 
     server.start();
+    server.serve(path.resolve(data.path));
+
+    if(data.proxy){
+        celeri.emit('proxy ' + data.proxy);
+    }
+
+});
+
+celeri.option({
+    command: 'logger',
+    description: 'Logs requests'
+}, function(data) {
+    server.logger();
+});
+
+celeri.option({
+    command: 'cache',
+    description: 'Cache all the requests proxyed'
+}, function(data) {
+    server.cache();
+});
+
+celeri.option({
+    command: 'proxy :ip',
+    description: 'Set-up the server to proxy requests'
+}, function(data) {
+    server.proxy(data.ip);
 });
 
 celeri.parse(process.argv);
 
-//celeri.open({prefix: 'juppy > '});
+celeri.open({prefix: 'juppy > '});
