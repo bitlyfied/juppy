@@ -31,10 +31,10 @@ celeri.option({
 });
 
 celeri.option({
-    command: 'proxy :ip',
+    command: 'proxy :ip OR proxy :ip :port',
     description: 'Set-up the server to proxy requests'
 }, function(data) {
-    server.proxy(data.ip);
+    server.proxy(data.ip, data.port);
 });
 
 celeri.parse(process.argv);
