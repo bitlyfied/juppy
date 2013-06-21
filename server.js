@@ -5,6 +5,7 @@ var util = require('util');
 var extend = util._extend;
 var colors = require('colors');
 var fs = require('fs');
+var hacks = require('./custom.js');
 
 var proxy;
 var cache = {};
@@ -20,6 +21,8 @@ var exp = express();
 exp.get('/hello', function(req, res){
 	res.send('Hello Juppy!');
 });
+
+hacks(exp);
 
 function proxyCache(req, res, next){
 
