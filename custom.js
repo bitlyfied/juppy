@@ -4,7 +4,7 @@ function cacheMe(id, req, res, next){
     var hit = cache[id];
 
     if(hit){
-        console.log('From Cache: ' + (hit.status == 200 ? id.green : id.orange));
+        console.log('From Cache: ' + (hit.status == 200 ? id.green : id.red));
         res.status(hit.status);
         res.header(hit.header);
         res.send(hit.body);
@@ -19,7 +19,7 @@ function cacher(id, res){
     var originalWrite = res.write;
 
     res.write = function(chunk){
-        chunks.push(chunk);
+        chunks.push(chunk.toString());
         return originalWrite.apply(this, arguments);
     }
 
@@ -27,7 +27,7 @@ function cacher(id, res){
         cache[id] = {
             status : res.statusCode,
             header : res._header,
-            body   : Buffer.concat(chunks)
+            body   : chunks.join('')
         };
 
         console.log("Cache (%d): %s", Object.keys(cache).length, Object.keys(cache));
@@ -35,6 +35,9 @@ function cacher(id, res){
 }
 
 module.exports = function(app){
+
+    //return;
+
     app.get('/disabled-admin', function(req, res, next){
 
         if(req.headers.host == 'noths.dev.noths.com'){
