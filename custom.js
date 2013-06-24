@@ -24,13 +24,17 @@ function cacher(id, res){
     }
 
     res.on('finish', function(){
+        if(res.statusCode == 500){
+            return;
+        }
+
         cache[id] = {
             status : res.statusCode,
             header : res._header,
             body   : chunks.join('')
         };
 
-        console.log("Cache (%d): %s", Object.keys(cache).length, Object.keys(cache));
+        console.log("Cache (%d): %s", Object.keys(cache).length, id);
     });
 }
 
