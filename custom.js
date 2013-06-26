@@ -25,6 +25,7 @@ function cacher(id, res){
 
     res.on('finish', function(){
         if(res.statusCode == 500){
+            console.log("Cache error: %s %s", (res.statusCode+'').red, id.yellow);
             return;
         }
 
@@ -53,7 +54,7 @@ module.exports = function(app){
 
     app.get('/*', function(req, res, next){
         if(req.xhr){
-            var id = req.url.replace(/_dc=(\d*)?&/, '').replace(/authenticity_token=(.*?)($|&)/, '').replace(/(\?|&)$/,'');
+            var id = req.headers.host + req.url.replace(/_dc=(\d*)?&/, '').replace(/authenticity_token=(.*?)($|&)/, '').replace(/(\?|&)$/,'');
             return cacheMe(id, req, res, next);
         }else{
             return next();

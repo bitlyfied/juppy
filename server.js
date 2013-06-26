@@ -16,6 +16,7 @@ var settings = {
 	forwardPort : 80
 };
 
+httpProxy.setMaxSockets(1000);
 var exp = express();
 
 exp.get('/hello', function(req, res){
