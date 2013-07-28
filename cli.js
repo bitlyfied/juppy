@@ -9,6 +9,7 @@ celeri.option({
 
     server.start();
     server.serve(path.resolve(data.path));
+    server.proxy('localhost', 8000);
 
     if(data.proxy){
         celeri.emit('proxy ' + data.proxy);

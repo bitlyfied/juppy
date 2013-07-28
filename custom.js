@@ -39,7 +39,48 @@ function cacher(id, res){
     });
 }
 
+function filterMe(res, next, flt){
+    filter(res, flt);
+    next();
+}
+
+function filter(res, flt){
+    var content = '';
+    var originalWrite = res.write;
+    var originalHead = res.writeHead;
+    var originalEnd = res.end;
+
+    res.writeHead = function(){
+        return;
+    }
+
+    res.write = function(chunk){
+        content += chunk.toString();
+    }
+
+    res.end = function(){
+        var body = flt(content);
+        
+        res.setHeader('content-length', body.length);
+        originalHead.call(this, 200);
+
+        originalWrite.call(this, new Buffer(body));
+        originalEnd.call(this);
+    }
+
+    res.on('ssfinish', function(){
+        console.log('finish');
+    });
+}
+
 module.exports = function(app){
+
+
+    app.get('/*', function(req, res, next){
+        return filterMe(res, next, function(content){
+            return content;
+        });
+    });
 
     //return;
 
